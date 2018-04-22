@@ -1,0 +1,29 @@
+ 1、添加用户：
+su zenoss
+zendmd
+zport.acl_users.manage_addUser(None,{'cn':'ydsoc','confirm_pw':'12345678','userPassword':'12345678','user_pw':'12345678','user_roles':('Manager','cn=Manager,ou=roles,ou=ssoc,dc=s-ec,dc=com', ['Manager']) })
+commit()
+exit()
+zport.acl_users.getUserNames() 获取用户名
+获取用户密码：
+
+
+删除用户：
+zport.acl_users.manage_deleteUsers(["cn=admin,ou=users,ou=ssoc,dc=s-ec,dc=com"])
+
+2、zenoss中添加一组ldap server
+查询ldap服务
+>>> zport.acl_users.getServers()   
+删除ldap服务
+>>> zport.acl_users.manage_deleteServers([0])     
+添加ldap服务
+>>> zport.acl_users.manage_addServer('192.168.10.43')
+>>> commit()
+
+3、解除锁定用户
+su zenoss
+zendmd
+>>> u = dmd.ZenUsers.getUserSettings('sysadmin')
+>>> u.UnLockTime = 1
+>>> commit()
+
