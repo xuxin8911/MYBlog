@@ -1,0 +1,56 @@
+
+一、yum install keepalive*
+
+二、编译安装
+1、下载安装包并解压
+
+sudo wget http://www.keepalived.org/software/keepalived-1.2.13.tar.gz 
+
+tar zxvf keepalived-1.2.13.tar.gz 
+
+2、编译安装
+
+cd keepalived-1.2.13
+
+./configure --prefix=/usr/local/keepalived
+
+[如果出现configure: error:
+
+     !!! OpenSSL is not properly installed on your system. !!!
+
+则需要先安装openssl和openssl-devel, yum install openssl openssl-devel]
+
+make 
+
+sudo make install
+
+sudo cp /usr/local/keepalived/sbin/keepalived /usr/sbin/
+
+sudo cp /usr/local/keepalived/etc/sysconfig/keepalived /etc/sysconfig/
+
+sudo cp /usr/local/keepalived/etc/rc.d/init.d/keepalived /etc/init.d/
+
+mkdir /etc/keepalived
+
+cd /etc/keepalive
+
+sudo cp /usr/local/keepalived/etc/keepalived/keepalived.conf ./
+
+3、将keepalived添加到开机启动服务中，并进行测试
+
+chkconfig keepalived on
+
+chkconfig --list | grep keepalived
+
+sudo service keepalived restart
+
+修改keepalived.conf文件（smtp_server 改成localhost, router_id变成NodeMaster, virtual_ipaddress 改成你自己网段内且没有被使用的如10.1.xx.xx/24格式的.
+
+运行ip addr查看vip
+
+运行ping命令访问vip。
+
+4、在从服务器上进行步骤1-3
+
+注意：router_id变成NodeBackup，priority变成99, state变成BACKUP，主从服务器要在同一个网段内。
+

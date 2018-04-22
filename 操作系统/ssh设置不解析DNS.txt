@@ -1,0 +1,5 @@
+
+
+sed -i "s/#UseDNS yes/UseDNS no/"  /etc/ssh/sshd_config
+
+/etc/init.d/sshd restart

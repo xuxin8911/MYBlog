@@ -1,0 +1,37 @@
+解决方法：
+ 
+这是因为libvirt没有创建default网络， 手动创建即可：
+vi  /etc/libvirt/qemu/networks/default.xml
+<network>
+  <name>default</name>
+  <bridge name="virbr0" />
+  <forward/>
+  <ip address="192.168.122.1" netmask="255.255.255.0">
+    <dhcp>
+      <range start="192.168.122.2" end="192.168.122.254" />
+    </dhcp>
+  </ip>
+</network>
+
+ 定义指定的虚拟网络文件：
+virsh net-define /etc/libvirt/qemu/networks/default.xml
+
+重启服务：
+systemctl  restart  libvirtd 
+
+标记自动启动：
+ [root@cloud networks]# virsh net-autostart default
+
+启动网络：
+[root@cloud networks]# virsh net-start default
+
+
+[root@cloud networks]# virsh net-list --all
+ Name                 State      Autostart     Persistent
+----------------------------------------------------------
+ default              active     yes           yes
+
+验证方法：
+[root@cloud networks]# brctl show
+bridge name	bridge id		STP enabled	interfaces
+virbr0		8000.525400fb2f28	yes		virbr0-nic
